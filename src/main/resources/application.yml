@@ -1,0 +1,16 @@
+# basepath for search
+base.search.path: "file:/config"
+
+spring:
+  application:
+    name: "alexandria-config-server"
+  banner:
+    location: classpath:/banner.txt
+
+  cloud:
+    config:
+      server:
+        bootstrap: "true"
+        native.search-locations: "${base.search.path}/general,${base.search.path}/{application}, ${base.search.path}/{application}/{profile}, ${base.search.path}/{application}/{profile}/{label}"
+
+  profiles.active: "native"

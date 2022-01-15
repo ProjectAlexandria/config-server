@@ -12,9 +12,9 @@
 	<artifactId>config-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>config-server</name>
-	<description>Central </description>
+	<description>Central configuration for project Alexandria</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 		<kotlin.version>1.6.10</kotlin.version>
 		<spring-cloud.version>2021.0.0</spring-cloud.version>
 	</properties>
