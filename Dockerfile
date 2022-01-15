@@ -5,7 +5,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN ./mvnw clean install
+RUN chmod +x ./mvnw && ./mvnw clean install
 
 FROM openjdk:11
 
