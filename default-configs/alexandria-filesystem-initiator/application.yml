@@ -1,0 +1,12 @@
+alexandria:
+  initiator:
+    filesystem:
+      sources[0]:
+        id: 1
+        name: default
+        path: /projects
+#      sources[1]:
+#        id: 2
+#        name: example
+#        path: /example
+      cron: "*/5 * * * *"

@@ -18,7 +18,7 @@ COPY --from=build /target/config-server-*.jar /config-server.jar
 
 COPY default-configs/ /default-configs/
 
-CMD mkdir -p /config && cp -n /default-configs/* /config/ && java -jar /config-server.jar
+CMD mkdir -p /config && cp -nr /default-configs/* /config/ && java -jar /config-server.jar
 
 VOLUME /config
 
