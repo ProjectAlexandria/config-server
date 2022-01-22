@@ -1,5 +1,5 @@
 camunda.bpm.client.subscriptions:
-  pizza:
-      process-definition-key: pizza
-      include-extension-properties: false
-      #variable-names: defaultScore
+  maven-module-identification:
+    process-definition-key: ${alexandria.process-definition-key}
+    include-extension-properties: false
+    #variable-names: defaultScore

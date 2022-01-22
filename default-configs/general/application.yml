@@ -11,6 +11,8 @@ spring:
 alexandria:
   sharedfolder: /alexandriadata
   camunda-endpoint: http://workflow-engine:8080/engine-rest/
+  process-definition-key: alexandria-default  #override in specific settings possible
+
 
 camunda.bpm.client:
   base-url: ${alexandria.camunda-endpoint}

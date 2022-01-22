@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_146mkqz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="Process_0h8s7gz" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_16cgbab</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="Gateway_0kaprlb">
+      <bpmn:incoming>Flow_16cgbab</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gvvm0q</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0f4keec</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_16cgbab" sourceRef="StartEvent_1" targetRef="Gateway_0kaprlb" />
+    <bpmn:sequenceFlow id="Flow_0gvvm0q" sourceRef="Gateway_0kaprlb" targetRef="maven-module-identification" />
+    <bpmn:serviceTask id="maven-module-identification" name="Maven-Module ermitteln" camunda:type="external" camunda:topic="maven-module-identification">
+      <bpmn:incoming>Flow_0gvvm0q</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s97w3j</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0f4keec" sourceRef="Gateway_0kaprlb" targetRef="npm-project-identification" />
+    <bpmn:serviceTask id="npm-project-identification" name="NPM Projekte identifizieren" camunda:type="external" camunda:topic="npm-project-identification">
+      <bpmn:incoming>Flow_0f4keec</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xjjaeq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:parallelGateway id="Gateway_01dbgom">
+      <bpmn:incoming>Flow_0s97w3j</bpmn:incoming>
+      <bpmn:incoming>Flow_0xjjaeq</bpmn:incoming>
+      <bpmn:outgoing>Flow_072nl3z</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_0s97w3j" sourceRef="maven-module-identification" targetRef="Gateway_01dbgom" />
+    <bpmn:sequenceFlow id="Flow_0xjjaeq" sourceRef="npm-project-identification" targetRef="Gateway_01dbgom" />
+    <bpmn:endEvent id="Event_1w74w37">
+      <bpmn:incoming>Flow_072nl3z</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_072nl3z" sourceRef="Gateway_01dbgom" targetRef="Event_1w74w37" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0h8s7gz">
+      <bpmndi:BPMNEdge id="Flow_16cgbab_di" bpmnElement="Flow_16cgbab">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="255" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gvvm0q_di" bpmnElement="Flow_0gvvm0q">
+        <di:waypoint x="280" y="152" />
+        <di:waypoint x="280" y="80" />
+        <di:waypoint x="370" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f4keec_di" bpmnElement="Flow_0f4keec">
+        <di:waypoint x="305" y="177" />
+        <di:waypoint x="370" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s97w3j_di" bpmnElement="Flow_0s97w3j">
+        <di:waypoint x="470" y="80" />
+        <di:waypoint x="540" y="80" />
+        <di:waypoint x="540" y="152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xjjaeq_di" bpmnElement="Flow_0xjjaeq">
+        <di:waypoint x="470" y="177" />
+        <di:waypoint x="515" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_072nl3z_di" bpmnElement="Flow_072nl3z">
+        <di:waypoint x="565" y="177" />
+        <di:waypoint x="642" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0qdsv35_di" bpmnElement="Gateway_0kaprlb">
+        <dc:Bounds x="255" y="152" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jxrh5z_di" bpmnElement="maven-module-identification">
+        <dc:Bounds x="370" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_139fynb_di" bpmnElement="npm-project-identification">
+        <dc:Bounds x="370" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1pmsj4y_di" bpmnElement="Gateway_01dbgom">
+        <dc:Bounds x="515" y="152" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1w74w37_di" bpmnElement="Event_1w74w37">
+        <dc:Bounds x="642" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
