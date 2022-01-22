@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://123db:5432/postgres
+    url: jdbc:postgresql://db:5432/postgres
     username: postgres
     password: example
   jpa:
@@ -10,3 +10,41 @@ spring:
       ddl-auto: update
 alexandria:
   sharedfolder: /alexandriadata
+  camunda-endpoint: http://workflow-engine:8080/engine-rest/
+
+camunda.bpm.client:
+  base-url: ${alexandria.camunda-endpoint}
+
+feign:
+  client:
+    config:
+      processInstance:
+        url: ${alexandria.camunda-endpoint}
+      processDefinition:
+        url: ${alexandria.camunda-endpoint}
+      message:
+        url: ${alexandria.camunda-endpoint}
+      signal:
+        url: ${alexandria.camunda-endpoint}
+      execution:
+        url: ${alexandria.camunda-endpoint}
+      task:
+        url: ${alexandria.camunda-endpoint}
+      taskVariable:
+        url: ${alexandria.camunda-endpoint}
+      taskLocalVariable:
+        url: ${alexandria.camunda-endpoint}
+      taskIdentityLink:
+        url: ${alexandria.camunda-endpoint}
+      externalTask:
+        url: ${alexandria.camunda-endpoint}
+      incident:
+        url: ${alexandria.camunda-endpoint}
+      remoteRuntimeService:
+        url: ${alexandria.camunda-endpoint}
+      remoteRepositoryService:
+        url: ${alexandria.camunda-endpoint}
+      remoteTaskService:
+        url: ${alexandria.camunda-endpoint}
+      remoteExternalTaskService:
+        url: ${alexandria.camunda-endpoint}
