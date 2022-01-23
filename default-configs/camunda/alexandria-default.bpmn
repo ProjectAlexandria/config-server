@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_146mkqz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
-  <bpmn:process id="Process_0h8s7gz" isExecutable="true">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_146mkqz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="alexandria-default" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_16cgbab</bpmn:outgoing>
     </bpmn:startEvent>
@@ -8,6 +8,7 @@
       <bpmn:incoming>Flow_16cgbab</bpmn:incoming>
       <bpmn:outgoing>Flow_0gvvm0q</bpmn:outgoing>
       <bpmn:outgoing>Flow_0f4keec</bpmn:outgoing>
+      <bpmn:outgoing>Flow_00b1she</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="Flow_16cgbab" sourceRef="StartEvent_1" targetRef="Gateway_0kaprlb" />
     <bpmn:sequenceFlow id="Flow_0gvvm0q" sourceRef="Gateway_0kaprlb" targetRef="maven-module-identification" />
@@ -21,62 +22,195 @@
       <bpmn:outgoing>Flow_0xjjaeq</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:parallelGateway id="Gateway_01dbgom">
-      <bpmn:incoming>Flow_0s97w3j</bpmn:incoming>
-      <bpmn:incoming>Flow_0xjjaeq</bpmn:incoming>
+      <bpmn:incoming>Flow_0ul0d7b</bpmn:incoming>
+      <bpmn:incoming>Flow_1qu5q5d</bpmn:incoming>
+      <bpmn:incoming>Flow_18xsp93</bpmn:incoming>
+      <bpmn:incoming>Flow_1kvn6us</bpmn:incoming>
+      <bpmn:incoming>Flow_1eef8ii</bpmn:incoming>
       <bpmn:outgoing>Flow_072nl3z</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:sequenceFlow id="Flow_0s97w3j" sourceRef="maven-module-identification" targetRef="Gateway_01dbgom" />
-    <bpmn:sequenceFlow id="Flow_0xjjaeq" sourceRef="npm-project-identification" targetRef="Gateway_01dbgom" />
+    <bpmn:sequenceFlow id="Flow_0s97w3j" sourceRef="maven-module-identification" targetRef="Gateway_maven_analysis_required" />
+    <bpmn:sequenceFlow id="Flow_0xjjaeq" sourceRef="npm-project-identification" targetRef="Gateway_npm_analysis_required" />
     <bpmn:endEvent id="Event_1w74w37">
       <bpmn:incoming>Flow_072nl3z</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_072nl3z" sourceRef="Gateway_01dbgom" targetRef="Event_1w74w37" />
+    <bpmn:exclusiveGateway id="Gateway_npm_analysis_required" name="NPM Analyse nötig?">
+      <bpmn:incoming>Flow_0xjjaeq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0radfym</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ul0d7b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_maven_analysis_required" name="Maven Analyse notwendig?">
+      <bpmn:incoming>Flow_0s97w3j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qu5q5d</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1gbvwp0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0radfym" name="Ja&#10;&#10;" sourceRef="Gateway_npm_analysis_required" targetRef="npm-analysis">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">length(npm_project_paths)&gt;0</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ul0d7b" name="Nein" sourceRef="Gateway_npm_analysis_required" targetRef="Gateway_01dbgom">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">length(npm_project_paths)=0</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1qu5q5d" sourceRef="Gateway_maven_analysis_required" targetRef="Gateway_01dbgom">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">length(maven_module_paths)=0</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1gbvwp0" name="Ja" sourceRef="Gateway_maven_analysis_required" targetRef="maven-analysis" />
+    <bpmn:serviceTask id="npm-analysis" name="NPM Analyse" camunda:type="external" camunda:topic="npm-analysis">
+      <bpmn:incoming>Flow_0radfym</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dtftaz</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="split(npm_project_paths,&#34;;&#34;)" camunda:elementVariable="npm_project_path" />
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="maven-analysis" name="Maven Analyse" camunda:type="external" camunda:topic="maven-analysis">
+      <bpmn:incoming>Flow_1gbvwp0</bpmn:incoming>
+      <bpmn:outgoing>Flow_120qv19</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="split(maven_module_paths,&#34;;&#34;)" camunda:elementVariable="maven_module_path" />
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="docker-analysis" name="Docker Analyse" camunda:type="external" camunda:topic="docker-analysis">
+      <bpmn:incoming>Flow_00b1she</bpmn:incoming>
+      <bpmn:outgoing>Flow_18xsp93</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_00b1she" sourceRef="Gateway_0kaprlb" targetRef="docker-analysis" />
+    <bpmn:sequenceFlow id="Flow_18xsp93" sourceRef="docker-analysis" targetRef="Gateway_01dbgom" />
+    <bpmn:sequenceFlow id="Flow_120qv19" sourceRef="maven-analysis" targetRef="maven-license-analysis" />
+    <bpmn:sequenceFlow id="Flow_1kvn6us" sourceRef="maven-license-analysis" targetRef="Gateway_01dbgom" />
+    <bpmn:sequenceFlow id="Flow_0dtftaz" sourceRef="npm-analysis" targetRef="npm-license-analysis" />
+    <bpmn:serviceTask id="npm-license-analysis" name="NPM Lizenz-Analyse" camunda:type="external" camunda:topic="npm-license-analysis">
+      <bpmn:incoming>Flow_0dtftaz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1eef8ii</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="maven-license-analysis" name="Maven Lizenz Analyse" camunda:type="external" camunda:topic="maven-license-analysis">
+      <bpmn:incoming>Flow_120qv19</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kvn6us</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1eef8ii" sourceRef="npm-license-analysis" targetRef="Gateway_01dbgom" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0h8s7gz">
-      <bpmndi:BPMNEdge id="Flow_16cgbab_di" bpmnElement="Flow_16cgbab">
-        <di:waypoint x="215" y="177" />
-        <di:waypoint x="255" y="177" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0gvvm0q_di" bpmnElement="Flow_0gvvm0q">
-        <di:waypoint x="280" y="152" />
-        <di:waypoint x="280" y="80" />
-        <di:waypoint x="370" y="80" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0f4keec_di" bpmnElement="Flow_0f4keec">
-        <di:waypoint x="305" y="177" />
-        <di:waypoint x="370" y="177" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0s97w3j_di" bpmnElement="Flow_0s97w3j">
-        <di:waypoint x="470" y="80" />
-        <di:waypoint x="540" y="80" />
-        <di:waypoint x="540" y="152" />
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="alexandria-default">
+      <bpmndi:BPMNEdge id="Flow_072nl3z_di" bpmnElement="Flow_072nl3z">
+        <di:waypoint x="975" y="267" />
+        <di:waypoint x="1002" y="267" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xjjaeq_di" bpmnElement="Flow_0xjjaeq">
-        <di:waypoint x="470" y="177" />
-        <di:waypoint x="515" y="177" />
+        <di:waypoint x="470" y="267" />
+        <di:waypoint x="515" y="267" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_072nl3z_di" bpmnElement="Flow_072nl3z">
-        <di:waypoint x="565" y="177" />
-        <di:waypoint x="642" y="177" />
+      <bpmndi:BPMNEdge id="Flow_0s97w3j_di" bpmnElement="Flow_0s97w3j">
+        <di:waypoint x="470" y="140" />
+        <di:waypoint x="515" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f4keec_di" bpmnElement="Flow_0f4keec">
+        <di:waypoint x="305" y="267" />
+        <di:waypoint x="370" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gvvm0q_di" bpmnElement="Flow_0gvvm0q">
+        <di:waypoint x="280" y="242" />
+        <di:waypoint x="280" y="140" />
+        <di:waypoint x="370" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16cgbab_di" bpmnElement="Flow_16cgbab">
+        <di:waypoint x="215" y="267" />
+        <di:waypoint x="255" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0radfym_di" bpmnElement="Flow_0radfym">
+        <di:waypoint x="565" y="267" />
+        <di:waypoint x="620" y="267" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="587" y="249" width="12" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ul0d7b_di" bpmnElement="Flow_0ul0d7b">
+        <di:waypoint x="540" y="242" />
+        <di:waypoint x="540" y="200" />
+        <di:waypoint x="950" y="200" />
+        <di:waypoint x="950" y="242" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="541" y="182" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qu5q5d_di" bpmnElement="Flow_1qu5q5d">
+        <di:waypoint x="540" y="165" />
+        <di:waypoint x="540" y="200" />
+        <di:waypoint x="950" y="200" />
+        <di:waypoint x="950" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gbvwp0_di" bpmnElement="Flow_1gbvwp0">
+        <di:waypoint x="565" y="140" />
+        <di:waypoint x="620" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="587" y="122" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00b1she_di" bpmnElement="Flow_00b1she">
+        <di:waypoint x="280" y="292" />
+        <di:waypoint x="280" y="390" />
+        <di:waypoint x="620" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18xsp93_di" bpmnElement="Flow_18xsp93">
+        <di:waypoint x="720" y="390" />
+        <di:waypoint x="950" y="390" />
+        <di:waypoint x="950" y="292" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_120qv19_di" bpmnElement="Flow_120qv19">
+        <di:waypoint x="720" y="140" />
+        <di:waypoint x="780" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kvn6us_di" bpmnElement="Flow_1kvn6us">
+        <di:waypoint x="880" y="140" />
+        <di:waypoint x="950" y="140" />
+        <di:waypoint x="950" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dtftaz_di" bpmnElement="Flow_0dtftaz">
+        <di:waypoint x="720" y="267" />
+        <di:waypoint x="780" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1eef8ii_di" bpmnElement="Flow_1eef8ii">
+        <di:waypoint x="880" y="267" />
+        <di:waypoint x="925" y="267" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="179" y="159" width="36" height="36" />
+        <dc:Bounds x="179" y="249" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0qdsv35_di" bpmnElement="Gateway_0kaprlb">
-        <dc:Bounds x="255" y="152" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1jxrh5z_di" bpmnElement="maven-module-identification">
-        <dc:Bounds x="370" y="40" width="100" height="80" />
+        <dc:Bounds x="255" y="242" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_139fynb_di" bpmnElement="npm-project-identification">
-        <dc:Bounds x="370" y="137" width="100" height="80" />
+        <dc:Bounds x="370" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_08yyhz2_di" bpmnElement="Gateway_npm_analysis_required" isMarkerVisible="true">
+        <dc:Bounds x="515" y="242" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="508" y="299" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jxrh5z_di" bpmnElement="maven-module-identification">
+        <dc:Bounds x="370" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1bvstfa_di" bpmnElement="Gateway_maven_analysis_required" isMarkerVisible="true">
+        <dc:Bounds x="515" y="115" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="502" y="85" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0jfhksu_di" bpmnElement="npm-analysis">
+        <dc:Bounds x="620" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bydb9y_di" bpmnElement="maven-analysis">
+        <dc:Bounds x="620" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mrh12d_di" bpmnElement="docker-analysis">
+        <dc:Bounds x="620" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0t4ckab_di" bpmnElement="npm-license-analysis">
+        <dc:Bounds x="780" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18frjd1_di" bpmnElement="maven-license-analysis">
+        <dc:Bounds x="780" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1pmsj4y_di" bpmnElement="Gateway_01dbgom">
-        <dc:Bounds x="515" y="152" width="50" height="50" />
+        <dc:Bounds x="925" y="242" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1w74w37_di" bpmnElement="Event_1w74w37">
-        <dc:Bounds x="642" y="159" width="36" height="36" />
+        <dc:Bounds x="1002" y="249" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
