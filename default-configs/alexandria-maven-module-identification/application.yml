@@ -1,5 +1,0 @@
-camunda.bpm.client.subscriptions:
-  maven-module-identification:
-    process-definition-key: ${alexandria.process-definition-key}
-    include-extension-properties: false
-    #variable-names: defaultScore
