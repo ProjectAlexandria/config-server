@@ -46,24 +46,26 @@
       <bpmn:outgoing>Flow_1gbvwp0</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0radfym" name="Ja&#10;&#10;" sourceRef="Gateway_npm_analysis_required" targetRef="npm-analysis">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">length(npm_project_paths)&gt;0</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${npm_project_paths.size()&gt;0}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0ul0d7b" name="Nein" sourceRef="Gateway_npm_analysis_required" targetRef="Gateway_01dbgom">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">length(npm_project_paths)=0</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${npm_project_paths.size()==0}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1qu5q5d" sourceRef="Gateway_maven_analysis_required" targetRef="Gateway_01dbgom">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">length(maven_module_paths)=0</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${maven_module_paths.size()==0}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1gbvwp0" name="Ja" sourceRef="Gateway_maven_analysis_required" targetRef="maven-analysis" />
+    <bpmn:sequenceFlow id="Flow_1gbvwp0" name="Ja" sourceRef="Gateway_maven_analysis_required" targetRef="maven-analysis">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${maven_module_paths.size()&gt;0}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:serviceTask id="npm-analysis" name="NPM Analyse" camunda:type="external" camunda:topic="npm-analysis">
       <bpmn:incoming>Flow_0radfym</bpmn:incoming>
       <bpmn:outgoing>Flow_0dtftaz</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="split(npm_project_paths,&#34;;&#34;)" camunda:elementVariable="npm_project_path" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="npm_project_paths" camunda:elementVariable="npm_project_path" />
     </bpmn:serviceTask>
     <bpmn:serviceTask id="maven-analysis" name="Maven Analyse" camunda:type="external" camunda:topic="maven-analysis">
       <bpmn:incoming>Flow_1gbvwp0</bpmn:incoming>
       <bpmn:outgoing>Flow_120qv19</bpmn:outgoing>
-      <bpmn:multiInstanceLoopCharacteristics camunda:collection="split(maven_module_paths,&#34;;&#34;)" camunda:elementVariable="maven_module_path" />
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="maven_module_paths" camunda:elementVariable="maven_module_path" />
     </bpmn:serviceTask>
     <bpmn:serviceTask id="docker-analysis" name="Docker Analyse" camunda:type="external" camunda:topic="docker-analysis">
       <bpmn:incoming>Flow_00b1she</bpmn:incoming>
@@ -124,7 +126,7 @@
         <di:waypoint x="950" y="200" />
         <di:waypoint x="950" y="242" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="541" y="182" width="23" height="14" />
+          <dc:Bounds x="558" y="182" width="23" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1qu5q5d_di" bpmnElement="Flow_1qu5q5d">
