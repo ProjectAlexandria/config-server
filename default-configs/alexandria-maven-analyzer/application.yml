@@ -1,0 +1,8 @@
+camunda.bpm.client:
+  max-tasks: 1
+  lock-duration: 600000
+  subscriptions:
+    maven-analysis:
+      process-definition-key: ${alexandria.process-definition-key}
+      include-extension-properties: false
+      variable-names: maven_module_path
