@@ -1,0 +1,5 @@
+camunda.bpm.client:
+  subscriptions:
+    cleanup:
+      process-definition-key: ${alexandria.process-definition-key}
+      include-extension-properties: false
