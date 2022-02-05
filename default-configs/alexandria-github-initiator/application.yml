@@ -1,0 +1,11 @@
+alexandria:
+  initiator:
+    github:
+      sources[0]:
+        id: 2
+        name: proj-alexandria
+        organization: ProjectAlexandria
+        accessUsername: Foo
+        accessToken: Foo
+        #repositoryNamePattern: #Regex for search pattern.
+        #branchNamePattern: #Regex for search Pattern. Default search always avaiable
