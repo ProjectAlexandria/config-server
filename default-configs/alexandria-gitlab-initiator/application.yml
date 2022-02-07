@@ -1,0 +1,12 @@
+alexandria:
+  initiator:
+    gitlab:
+      sources[0]:
+        id: 3
+        name: dummy
+        url: https://gitlab.com/
+        group-id: 16038523
+        accessUsername: Kikkirej
+        accessToken: glpat-Z3oSCpPs9JMmwK4SqmP5
+        #repositoryNamePattern: #Regex for search pattern.
+        #branchNamePattern: #Regex for search Pattern. Default search always avaiable
