@@ -1,0 +1,6 @@
+camunda.bpm.client:
+  subscriptions:
+    npm-analysis:
+      process-definition-key: ${alexandria.process-definition-key}
+      include-extension-properties: false
+      variable-names: npm_project_path
